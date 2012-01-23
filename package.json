@@ -1,11 +1,11 @@
 {
   "author": "Monica Wilkinson <ciberch@gmail.com> (http://ciberch.cloudfoundry.com)",
-  "name": "activity-streams-mongoose-schema",
-  "description": "Activity Streams Schemas for Mongo via Mongoose",
-  "version": "0.0.0",
+  "name": "activity-streams-mongoose",
+  "description": "Activity Streams via Mongoose",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ciberch/activity-streams-mongoose-schema.git"
+    "url": "git://github.com/ciberch/activity-streams-mongoose.git"
   },
   "main": "./index.js",
   "engines": {

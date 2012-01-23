@@ -20,7 +20,7 @@ For details on the properties each see pne of the following specifications:
 ```javascript
 var mongoose = require('mongoose');
 mongoose.connect(siteConf.mongoUrl);
-var asmsDB = require('activity-streams-mongoose-schema')(mongoose);
+var asmsDB = require('activity-streams-mongoose')(mongoose);
 ```
 
 ### To create an activity object you can do
