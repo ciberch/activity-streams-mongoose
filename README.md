@@ -27,9 +27,9 @@ Options
 
 * full --> true or false
 * redis --> Hash including keys
-** host
-** port
-** pass
+    * host
+    * port
+    * pass
 
 Redis is required to be able to publish activities and subscribe to Activity Streams
 
