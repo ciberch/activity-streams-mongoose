@@ -2,7 +2,7 @@
   "author": "Monica Wilkinson <ciberch@gmail.com> (http://ciberch.cloudfoundry.com)",
   "name": "activity-streams-mongoose",
   "description": "Activity Streams via Mongoose",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "repository": {
     "type": "git",
     "url": "git://github.com/ciberch/activity-streams-mongoose.git"
@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "mongoose": "",
-    "redis": ">= 0.5.11 < 1.0.0",
-    "hiredis": ">= 0.1.9 < 1.0.0"
+    "underscore":"",
+    "redis": ">= 0.5.11 < 1.0.0"
   },
   "devDependencies": {
     "nodeunit": ""

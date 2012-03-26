@@ -25,7 +25,6 @@ var asmsDB = require('activity-streams-mongoose')(mongoose, options);
 
 Options
 
-* full --> true or false
 * redis --> Hash including keys
     * host
     * port
@@ -58,7 +57,16 @@ testAct.save(function (err) {
 
 ### To query the Activity Streams do
 
-Asking for the latest 5:
+Asking for the latest 5 from stream "sfgiants"
+
+```javascript
+asmsDB.getActivityStream("sfgiants", 5, function (err, docs) {
+   docs.forEach(function(doc){console.log(doc);});
+});
+
+```
+
+Asking for the latest 5 from firehose
 
 ```javascript
 asmsDB.getActivityStream(5, function (err, docs) {
@@ -87,4 +95,13 @@ var clientSendFx =  function(channel, json) {
         }
 
 asmsDB.subscribe('cloudfoundry-stream', clientSendFx);
+```
+
+## To run tests
+
+- Start MongoDB
+- Start Redis
+
+``` bash
+nodeunit test/test-activityMongoose.js
 ```

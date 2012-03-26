@@ -44,7 +44,38 @@ exports.PubSub = function(test) {
         test.equal(testAct.actor.displayName, act.actor.displayName);
         test.equal(String(testAct._id), String(act._id));
         test.equal(testAct.verb, act.verb);
+        test.equal(testAct.streams[0], 'cloudfoundry-stream');
         test.done();
     });
     asmsDB.publish('cloudfoundry-stream', testAct);
+};
+
+exports.getActivityStream = function(test) {
+    var testAct = new asmsDB.Activity({title: "Started the app"});
+    asmsDB.publish('abc', testAct);
+    var testAct2 = new asmsDB.Activity({title: "A different title"});
+    asmsDB.publish('cde', testAct2);
+    asmsDB.getActivityStream('abc', 2, function(err, docs) {
+        if (err) {
+            test.fail();
+        } else {
+         docs.forEach(function(doc){test.equal(doc.title, "Started the app");});
+         test.done();
+        }
+    });
+
+};
+
+exports.getActivityStreamFirehose = function(test) {
+    var testAct = new asmsDB.Activity({title: "An amazing app"});
+    asmsDB.publish('abc', testAct);
+    asmsDB.getActivityStreamFirehose(2, function(err, docs) {
+        if (err) {
+            test.fail();
+        } else {
+         docs.forEach(function(doc){test.equal(doc.title, "An amazing app");});
+         test.done();
+        }
+    });
+
 };
