@@ -67,13 +67,19 @@ exports.getActivityStream = function(test) {
 };
 
 exports.getActivityStreamFirehose = function(test) {
-    var testAct = new asmsDB.Activity({title: "An amazing app"});
-    asmsDB.publish('abc', testAct);
+    var testAct = new asmsDB.Activity({title: "Latest News", content: "There is a new rock band in SF"});
+    asmsDB.publish('music', testAct);
+
+    var testAct2 = new asmsDB.Activity({title: "Latest News", content: "Roland Garros finals winner is Rafael Nadal"});
+    asmsDB.publish('sports', testAct2);
+
     asmsDB.getActivityStreamFirehose(2, function(err, docs) {
         if (err) {
             test.fail();
         } else {
-         docs.forEach(function(doc){test.equal(doc.title, "An amazing app");});
+         docs.forEach(function(doc){
+             test.equal(doc.title, "Latest News");
+         });
          test.done();
         }
     });

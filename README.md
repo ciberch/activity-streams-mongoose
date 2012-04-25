@@ -23,12 +23,12 @@ mongoose.connect(siteConf.mongoUrl);
 var asmsDB = require('activity-streams-mongoose')(mongoose, options);
 ```
 
-Options
+### Options
 
-* redis --> Hash including keys
-    * host
-    * port
-    * pass
+- redis --> Hash including keys
+  - host
+  - port
+  - pass
 
 Redis is required to be able to publish activities and subscribe to Activity Streams
 
@@ -69,7 +69,7 @@ asmsDB.getActivityStream("sfgiants", 5, function (err, docs) {
 Asking for the latest 5 from firehose
 
 ```javascript
-asmsDB.getActivityStreamFirehose(5, function (err, docs) {
+asmsDB.getActivityStream(5, function (err, docs) {
    docs.forEach(function(doc){console.log(doc);});
 });
 
