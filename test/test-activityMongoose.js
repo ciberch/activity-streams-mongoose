@@ -1,4 +1,4 @@
-var mongooseUrl = 'mongodb://localhost/mongodb-asms';
+var mongooseUrl = 'mongodb://localhost/test-activity-mongoose';
 var redisOptions = {host: '127.0.0.1', port: 6379};
 var mongoose = require('mongoose');
 mongoose.connect(mongooseUrl);
