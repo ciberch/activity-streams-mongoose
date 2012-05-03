@@ -4,6 +4,17 @@ var mongoose = require('mongoose');
 mongoose.connect(mongooseUrl);
 var asmsDB = require('../lib/activityMongoose')(mongoose, {full: true, redis: redisOptions});
 
+exports.setUp = function (callback) {
+    asmsDB.Activity.remove({}, function() {
+        console.log("Removed Activity Objects");
+
+        asmsDB.ActivityObject.remove({}, function(){
+            console.log("Removed Activities");
+            callback();
+        });
+    });
+
+};
 
 exports.DefaultFullActivity = function(test) {
     var act = new asmsDB.Activity();
@@ -59,8 +70,9 @@ exports.getActivityStream = function(test) {
         if (err) {
             test.fail();
         } else {
-         docs.forEach(function(doc){test.equal(doc.title, "Started the app");});
-         test.done();
+		    test.equal(docs.length, 1);
+            docs.forEach(function(doc){test.equal(doc.title, "Started the app");});
+            test.done();
         }
     });
 
@@ -77,9 +89,8 @@ exports.getActivityStreamFirehose = function(test) {
         if (err) {
             test.fail();
         } else {
-         docs.forEach(function(doc){
-             test.equal(doc.title, "Latest News");
-         });
+         test.equal(docs.length, 2);
+         docs.forEach(function(doc){test.equal(doc.title, "Latest News");});
          test.done();
         }
     });

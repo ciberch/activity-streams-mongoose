@@ -69,7 +69,7 @@ asmsDB.getActivityStream("sfgiants", 5, function (err, docs) {
 Asking for the latest 5 from firehose
 
 ```javascript
-asmsDB.getActivityStream(5, function (err, docs) {
+asmsDB.getActivityStreamFirehose(5, function (err, docs) {
    docs.forEach(function(doc){console.log(doc);});
 });
 
