@@ -106,3 +106,7 @@ asmsDB.subscribe('cloudfoundry-stream', clientSendFx);
 ``` bash
 nodeunit test/test-activityMongoose.js
 ```
+
+## TODO
+
+- Add support for location for objects
