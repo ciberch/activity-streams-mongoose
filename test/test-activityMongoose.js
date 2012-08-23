@@ -40,10 +40,10 @@ exports.DefaultFullActivityObject = function(test) {
     ao.save(function(err) {
         if (!err ) {
             test.equal(String(ao._id).length > 0, true);
-            test.done();
         } else{
             test.fail();
         }
+        test.done();
     });
 };
 
@@ -72,8 +72,8 @@ exports.getActivityStream = function(test) {
         } else {
 		    test.equal(docs.length, 1);
             docs.forEach(function(doc){test.equal(doc.title, "Started the app");});
-            test.done();
         }
+        test.done();
     });
 
 };
@@ -91,8 +91,8 @@ exports.getActivityStreamFirehose = function(test) {
         } else {
          test.equal(docs.length, 2);
          docs.forEach(function(doc){test.equal(doc.title, "Latest News");});
-         test.done();
         }
+        test.done();
     });
 
 };
