@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/ciberch/activity-streams-mongoose.png)](http://travis-ci.org/ciberch/activity-streams-mongoose)
 ## Overview
 
 Activity Streams is a simple specification used to describe social actions around the web. http://activitystrea.ms
