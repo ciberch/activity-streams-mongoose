@@ -20,6 +20,6 @@
     "nodeunit": ""
   },
 	"scripts" : {
-		"test" : "nodeunit test/test-activityMongoose.js"
+		"test" : "nodeunit test"
 	}
 }
