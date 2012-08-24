@@ -98,13 +98,20 @@ var clientSendFx =  function(channel, json) {
 asmsDB.subscribe('cloudfoundry-stream', clientSendFx);
 ```
 
+
+### To close the Activity Stream DB connections (MongoDB and Redis)
+
+```javascript
+asmsDB.close();
+```
+
 ## To run tests
 
 - Start MongoDB
 - Start Redis
 
 ``` bash
-nodeunit test/test-activityMongoose.js
+npm test
 ```
 
 ## TODO
