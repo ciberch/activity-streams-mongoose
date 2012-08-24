@@ -1,16 +1,14 @@
-var mongoUrl = 'mongodb://localhost/test-activity-mongoose';
+var mongoUrl = 'mongodb://localhost/test-activity-mongoose-2';
 var redisOptions = {host: '127.0.0.1', port: 6379};
-var mongoose = require('mongoose');
 var asmsDB = null;
 
 module.exports = {
 
     setUp : function (callback) {
-
-        mongoose.connect(mongoUrl);
-        asmsDB = require('../lib/activityMongoose')(mongoose, {
+        asmsDB = require('../lib/activityMongoose')({
             full: true,
-            redis: redisOptions
+            redis: redisOptions,
+            mongoUrl: mongoUrl
         });
 
         asmsDB.Activity.remove({}, function() {

@@ -16,7 +16,13 @@ For details on the properties each see pne of the following specifications:
 
 ## Usage
 
-### First require the library passing an instance of Mongoose
+### Implicit
+
+```javascript
+var asmsDB = require('activity-streams-mongoose')(options);
+```
+
+### Or explicit if you need a Mongoose reference in your calling code
 
 ```javascript
 var mongoose = require('mongoose');
@@ -26,7 +32,10 @@ var asmsDB = require('activity-streams-mongoose')(mongoose, options);
 
 ### Options
 
-- redis --> Hash including keys
+- mongoUrl --> If you want to let `activity-streams-mongoose` manage Mongoose for you, just pass the url for the MongoDB.
+Example format is `mongodb://localhost/mongodb-asms`
+
+- redis --> Hash including keys specifying connection properties
   - host
   - port
   - pass
