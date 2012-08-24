@@ -8,7 +8,7 @@ module.exports = {
     setUp : function (callback) {
 
         mongoose.connect(mongoUrl);
-        asmsDB = require('../lib/activityMongoose')(mongoose, {
+        asmsDB = require('../index')(mongoose, {
             full: true,
             redis: redisOptions
         });
@@ -21,7 +21,9 @@ module.exports = {
 
     },
     tearDown :  function(callback) {
-        asmsDB.close();
+        if (asmsDB) {
+            asmsDB.close();
+        }
         callback();
     },
     DefaultFullActivity: function(test) {
