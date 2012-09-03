@@ -19,7 +19,14 @@ For details on the properties each see pne of the following specifications:
 ### Implicit
 
 ```javascript
-var asmsDB = require('activity-streams-mongoose')(options);
+var streamLib = require('activity-streams-mongoose')(options);
+
+// Here you can extend the schemas with any plugins
+streamLib.types.UserSchema.plugin(function(schema, options) {
+    schema.add({ lastMod: {type: Date, default: date}});
+});
+
+var asmsDB = new streamLib.DB(streamLib.db, streamLib.types);
 ```
 
 ### Or explicit if you need a Mongoose reference in your calling code
@@ -27,7 +34,8 @@ var asmsDB = require('activity-streams-mongoose')(options);
 ```javascript
 var mongoose = require('mongoose');
 mongoose.connect(siteConf.mongoUrl);
-var asmsDB = require('activity-streams-mongoose')(mongoose, options);
+var streamLib = require('activity-streams-mongoose')(mongoose, options);
+var asmsDB = new streamLib.DB(streamLib.db, streamLib.types);
 ```
 
 ### Options
@@ -70,7 +78,7 @@ testAct.save(function (err) {
 Asking for the latest 5 from stream "sfgiants"
 
 ```javascript
-asmsDB.getActivityStream("sfgiants", 5, function (err, docs) {
+asmsDB.Activity.getStream("sfgiants", 5, function (err, docs) {
    docs.forEach(function(doc){console.log(doc);});
 });
 
@@ -79,7 +87,7 @@ asmsDB.getActivityStream("sfgiants", 5, function (err, docs) {
 Asking for the latest 5 from firehose
 
 ```javascript
-asmsDB.getActivityStreamFirehose(5, function (err, docs) {
+asmsDB.Activity.getFirehose(5, function (err, docs) {
    docs.forEach(function(doc){console.log(doc);});
 });
 
@@ -90,7 +98,7 @@ asmsDB.getActivityStreamFirehose(5, function (err, docs) {
 ```javascript
 
 var testAct = new asmsDB.Activity({title: "Started the app", target: target._id});
-asmsDB.publish('cloudfoundry-stream', testAct);
+testAct.publish('cloudfoundry-stream');
 
 ```
 
@@ -104,7 +112,7 @@ var clientSendFx =  function(channel, json) {
             io.sockets.in(client.handshake.sid).send(json);
         }
 
-asmsDB.subscribe('cloudfoundry-stream', clientSendFx);
+asmsDB.Activity.subscribe('cloudfoundry-stream', clientSendFx);
 ```
 
 

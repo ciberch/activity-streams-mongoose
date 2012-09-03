@@ -5,7 +5,7 @@ var asmsDB = null;
 module.exports = {
 
     setUp : function (callback) {
-        stream_lib = require('../index')({
+        streamLib = require('../index')({
             full: true,
             redis: redisOptions,
             mongoUrl: mongoUrl
@@ -13,23 +13,26 @@ module.exports = {
 
         //////////////////////////////////////////////////////
         date = Date.now();
-        stream_lib.types.UserSchema.plugin(function(schema, options) {
+        streamLib.types.UserSchema.plugin(function(schema, options) {
             schema.add({ lastMod: {type: Date, default: date}});
         });
         // Now build the models
-        asmsDB = new stream_lib.DB(stream_lib.db, stream_lib.types);
+        asmsDB = new streamLib.DB(streamLib.db, streamLib.types);
         //////////////////////////////////////////////////////
-        callback();
+        asmsDB.Activity.remove({}, function() {
+            asmsDB.ActivityObject.remove({}, function(){
+                callback();
+            });
+        });
 
     },
     tearDown :  function(callback) {
-        if (stream_lib.db) {
-            stream_lib.close();
+        if (streamLib.db) {
+            streamLib.close();
         }
         callback();
     },
     Basic: function(test) {
-        asmsDB = new stream_lib.DB(stream_lib.db, stream_lib.types);
         var act = new asmsDB.Activity();
         test.notEqual(act, null);
 
@@ -66,7 +69,7 @@ module.exports = {
     },
     PubSub: function(test) {
         var testAct = new asmsDB.Activity({title: "Started the app"});
-        stream_lib.subscribe('cloudfoundry-stream', function(channel, json) {
+        asmsDB.Activity.subscribe('cloudfoundry-stream', function(channel, json) {
             var act = JSON.parse(json);
             test.equal(testAct.title, act.title);
             test.equal(testAct.actor.displayName, act.actor.displayName);
@@ -75,13 +78,13 @@ module.exports = {
             test.equal(testAct.streams[0], 'cloudfoundry-stream');
             test.done();
         });
-        stream_lib.publish('cloudfoundry-stream', testAct);
+        testAct.publish('cloudfoundry-stream');
     },
     getActivityStream: function(test) {
         var testAct = new asmsDB.Activity({title: "Started the app"});
-        stream_lib.publish('abc', testAct);
+        testAct.publish('abc');
         var testAct2 = new asmsDB.Activity({title: "A different title"});
-        stream_lib.publish('cde', testAct2);
+        testAct2.publish('cde');
         asmsDB.Activity.getStream('abc', 2, function(err, docs) {
             if (err) {
                 test.fail();
@@ -95,10 +98,10 @@ module.exports = {
     },
     getActivityStreamFirehose: function(test) {
         var testAct = new asmsDB.Activity({title: "Latest News", content: "There is a new rock band in SF"});
-        stream_lib.publish('music', testAct);
+        testAct.publish('music');
 
         var testAct2 = new asmsDB.Activity({title: "Latest News", content: "Roland Garros finals winner is Rafael Nadal"});
-        stream_lib.publish('sports', testAct2);
+        testAct2.publish('sports');
 
         asmsDB.Activity.getFirehose(2, function(err, docs) {
             if (err) {

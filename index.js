@@ -16,7 +16,6 @@ module.exports = function (){
         }
     };
      // Functions
-
     types.ActivitySchema.statics.getFirehose = function(n, fx) {
         this.find().sort('-published').limit(n).exec(fx);
     }
@@ -25,31 +24,31 @@ module.exports = function (){
         this.find({streams:streamName}).sort('-published').limit(n).exec(fx);
     }
 
-    this.publish = function(streamName, activity) {
+    types.ActivitySchema.methods.publish = function(streamName) {
         var publisher = state.redisPublisher;
 
-        if (!_.isArray(activity.streams)) {
-            activity.streams = []
+        if (!_.isArray(this.streams)) {
+            this.streams = []
         }
-        if (!_.include(activity.streams, streamName)) {
-            activity.streams.push(streamName);
+        if (!_.include(this.streams, streamName)) {
+            this.streams.push(streamName);
         }
 
-        activity.save(function(err) {
+        this.save(function(err, doc) {
             if (!err && streamName && publisher) {
-                publisher.publish(streamName, JSON.stringify(activity));
+                publisher.publish(streamName, JSON.stringify(doc));
             }
         });
     }
 
-    this.subscribe = function(streamName, fx) {
+    types.ActivitySchema.statics.subscribe = function(streamName, fx) {
         if (state.redisClient && streamName) {
             state.redisClient.subscribe(streamName);
             state.redisClient.on("message", fx);
         }
     }
 
-    this.unsubscribe = function(streamName, fx) {
+    types.ActivitySchema.statics.unsubscribe = function(streamName, fx) {
         if (state.redisClient && streamName) {
             state.redisClient.unsubscribe(streamName);
         }
