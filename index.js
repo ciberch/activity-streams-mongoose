@@ -6,22 +6,14 @@ module.exports = function (){
     var db = state.db;
 
     var types = require('./lib/activityMongoose.js')(state.mongoose, db, state.options.defaultActorImage);
-    this.types = types;
 
-    this.DB = function(db, types) {
-        return {
-            ActivityObject : db.model('activityObject', types.ActivityObjectSchema),
-            Activity : db.model('activity', types.ActivitySchema),
-            User : db.model('user', types.UserSchema)
-        }
-    };
      // Functions
     types.ActivitySchema.statics.getFirehose = function(n, fx) {
-        this.find().sort('-published').limit(n).exec(fx);
+        this.find().sort(defaultSort).limit(n).exec(fx);
     }
 
     types.ActivitySchema.statics.getStream = function(streamName, n, fx) {
-        this.find({streams:streamName}).sort('-published').limit(n).exec(fx);
+        this.find({streams:streamName}).sort(defaultSort).limit(n).exec(fx);
     }
 
     types.ActivitySchema.methods.publish = function(streamName) {
@@ -53,6 +45,16 @@ module.exports = function (){
             state.redisClient.unsubscribe(streamName);
         }
     }
+
+    this.types = types;
+
+    this.DB = function(db, types) {
+        return {
+            ActivityObject : db.model('activityObject', types.ActivityObjectSchema),
+            Activity : db.model('activity', types.ActivitySchema),
+            User : db.model('user', types.UserSchema)
+        }
+    };
 
     this.close = function() {
         state.mongoose.disconnect();
