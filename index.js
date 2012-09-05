@@ -3,49 +3,58 @@ module.exports = function (){
     var _ = require('underscore')._;
     var state = require('./lib/setup.js')(_, arguments);
     var defaultSort = '-published';
+    var db = state.db;
 
-    state.types = require('./lib/activityMongoose.js')(state.mongoose, state.db, state.options.defaultActorImage);
-    this.Activity = state.types.Activity;
+    var types = require('./lib/activityMongoose.js')(state.mongoose, db, state.options.defaultActorImage);
 
      // Functions
-
-    this.getActivityStreamFirehose = function(n, fx) {
-        state.Activity.find().sort(defaultSort).limit(n).exec(fx);
+    types.ActivitySchema.statics.getFirehose = function(n, fx) {
+        this.find().sort(defaultSort).limit(n).exec(fx);
     }
 
-    this.getActivityStream = function(streamName, n, fx) {
-        state.Activity.find({streams:streamName}).sort(defaultSort).limit(n).exec(fx);
+    types.ActivitySchema.statics.getStream = function(streamName, n, fx) {
+        this.find({streams:streamName}).sort(defaultSort).limit(n).exec(fx);
     }
 
-    this.publish = function(streamName, activity) {
+    types.ActivitySchema.methods.publish = function(streamName) {
         var publisher = state.redisPublisher;
 
-        if (!_.isArray(activity.streams)) {
-            activity.streams = []
+        if (!_.isArray(this.streams)) {
+            this.streams = []
         }
-        if (!_.include(activity.streams, streamName)) {
-            activity.streams.push(streamName);
+        if (!_.include(this.streams, streamName)) {
+            this.streams.push(streamName);
         }
 
-        activity.save(function(err) {
+        this.save(function(err, doc) {
             if (!err && streamName && publisher) {
-                publisher.publish(streamName, JSON.stringify(activity));
+                publisher.publish(streamName, JSON.stringify(doc));
             }
         });
     }
 
-    this.subscribe = function(streamName, fx) {
+    types.ActivitySchema.statics.subscribe = function(streamName, fx) {
         if (state.redisClient && streamName) {
             state.redisClient.subscribe(streamName);
             state.redisClient.on("message", fx);
         }
     }
 
-    this.unsubscribe = function(streamName, fx) {
+    types.ActivitySchema.statics.unsubscribe = function(streamName, fx) {
         if (state.redisClient && streamName) {
             state.redisClient.unsubscribe(streamName);
         }
     }
+
+    this.types = types;
+
+    this.DB = function(db, types) {
+        return {
+            ActivityObject : db.model('activityObject', types.ActivityObjectSchema),
+            Activity : db.model('activity', types.ActivitySchema),
+            User : db.model('user', types.UserSchema)
+        }
+    };
 
     this.close = function() {
         state.mongoose.disconnect();
