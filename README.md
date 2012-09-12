@@ -1,4 +1,8 @@
 [![build status](https://secure.travis-ci.org/ciberch/activity-streams-mongoose.png)](http://travis-ci.org/ciberch/activity-streams-mongoose)
+
+Author: Monica Wilkinson
+Copyright (c) 2012 VMware, Inc
+
 ## Overview
 
 Activity Streams is a simple specification used to describe social actions around the web. http://activitystrea.ms
@@ -131,6 +135,9 @@ asmsDB.close();
 npm test
 ```
 
-## TODO
+## License
 
-- Add support for location for objects
+Apache License
+
+See LICENSE file for more details
+
