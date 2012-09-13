@@ -15,9 +15,8 @@ module.exports = {
         });
 
         //////////////////////////////////////////////////////
-        date = Date.now();
         streamLib.types.UserSchema.plugin(function(schema, options) {
-            schema.add({ lastMod: {type: Date, default: date}});
+            schema.add({ lastMod: {type: Date, default: Date.now}});
         });
         // Now build the models
         asmsDB = new streamLib.DB(streamLib.db, streamLib.types);
