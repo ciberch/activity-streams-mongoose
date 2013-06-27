@@ -84,14 +84,16 @@ module.exports = {
         testAct.publish('abc');
         var testAct2 = new asmsDB.Activity({title: "A different title"});
         testAct2.publish('cde');
-        asmsDB.Activity.getStream('abc', 2, function(err, docs) {
-            if (err) {
-                test.fail();
-            } else {
-                test.equal(docs.length, 1);
-                docs.forEach(function(doc){test.equal(doc.title, "Started the app");});
-            }
-            test.done();
+        process.nextTick(function() {
+            asmsDB.Activity.getStream('abc', 2, function(err, docs) {
+                if (err) {
+                    test.fail();
+                } else {
+                    test.equal(docs.length, 1);
+                    docs.forEach(function(doc){test.equal(doc.title, "Started the app");});
+                }
+                test.done();
+            });
         });
 
     },
@@ -101,15 +103,16 @@ module.exports = {
 
         var testAct2 = new asmsDB.Activity({title: "Latest News", content: "Roland Garros finals winner is Rafael Nadal"});
         testAct2.publish('sports');
-
-        asmsDB.Activity.getFirehose(2, function(err, docs) {
-            if (err) {
-                test.fail();
-            } else {
-             test.equal(docs.length, 2);
-             docs.forEach(function(doc){test.equal(doc.title, "Latest News");});
-            }
-            test.done();
+        process.nextTick(function() {
+            asmsDB.Activity.getFirehose(2, function(err, docs) {
+                if (err) {
+                    test.fail();
+                } else {
+                 test.equal(docs.length, 2);
+                 docs.forEach(function(doc){test.equal(doc.title, "Latest News");});
+                }
+                test.done();
+            });
         });
     }
 };
