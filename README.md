@@ -51,6 +51,7 @@ Example format is `mongodb://localhost/mongodb-asms`
   - host
   - port
   - pass
+  - database
 
 Redis is required to be able to publish activities and subscribe to Activity Streams
 
