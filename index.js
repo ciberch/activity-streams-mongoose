@@ -16,7 +16,8 @@ module.exports = function (){
         this.find({streams:streamName}).sort(defaultSort).limit(n).exec(fx);
     }
 
-    types.ActivitySchema.methods.publish = function(streamName) {
+    types.ActivitySchema.methods.publish = function(streamName, fx) {
+        var self = this;
         var publisher = state.redisPublisher;
 
         if (!_.isArray(this.streams)) {
@@ -27,6 +28,7 @@ module.exports = function (){
         }
 
         this.save(function(err, doc) {
+            if (fx) fx.call(self, err, doc);
             if (!err && streamName && publisher) {
                 publisher.publish(streamName, JSON.stringify(doc));
             }
